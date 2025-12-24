@@ -88,7 +88,7 @@ This mirrors modern enterprise patterns where **intake tools are private, intern
 
 `cdx-web-scan` is one of four deployment-aligned components in CDX:
 
-[ cdx-web-scan ] → [ cdx-intake-api ] → [ AWS SQS ] → [ cdx-enrich-worker ] → [ PostgreSQL ] → [ cdx-web-user ]
+**[ cdx-web-scan ]** → [ cdx-intake-api ] → [ cdx-enrich-worker ]  → [ cdx-web-user ]
 
 
 This separation ensures:
