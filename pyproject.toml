@@ -1,0 +1,7 @@
+[project]
+name = "cdx-web-scan"
+version = "0.1.0"
+description = "Internal Intake & Scan Application (PWA)"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
