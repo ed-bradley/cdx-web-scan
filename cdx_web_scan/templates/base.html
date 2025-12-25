@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CDX Web Scan</title>
+
+    <!-- Logo Icon -->
+    
+    
+    <!-- Third Party CSS Libraries -->
+    
+        
+    <!-- Custom CSS (for this App) -->
+    <link rel="stylesheet" type="text/css" href="/static/styles.css" />
+</head>
+
+<body>
+    
+    <!-- START Alert Messages -->
+    <div class="container mt-1">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+        <div class="alert {{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endwith %}
+    </div>
+    <!-- END Alert Messages -->
+
+    <!-- *** VARIABLE CONTENT GETS LOADED HERE *** -->
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+    <!-- *** END VARIABLE CONTENT *** -->
+    
+    <!-- START Page Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <span class="footer-text">&copy; {{ current_year }} Edward Bradley</span>
+                <span class="footer-version">Version: {{ version }}</span>
+            </div>
+        </div>
+    </footer>
+    <!-- END Page Footer -->
+
+    <!-- Third Party Javascript Libraries -->
+    
+
+    <!-- Custom Javascript (for this App) -->
+    <script type="text/javascript" src="/static/app.js"></script>
+    
+  
+</body>
+
+</html>
