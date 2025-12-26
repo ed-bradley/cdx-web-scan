@@ -21,6 +21,10 @@ class Config:
     CDX_WEB_SCAN_LOG_FILE = environ.get("CDX_WEB_SCAN_LOG_FILE")
     APP_SERVER_OS = environ.get("APP_SERVER_OS")
 
+    # Intake API (AWS API Gateway + Lambda)
+    INTAKE_API_URL = environ.get("INTAKE_API_URL")
+    INTAKE_API_TOKEN = environ.get("INTAKE_API_TOKEN")
+
 class ProdConfig(Config):
     """Production System Configuration"""
 

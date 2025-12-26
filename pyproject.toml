@@ -10,5 +10,4 @@ dependencies = [
     "sqlalchemy>=2.0",
     "python-dotenv>=1.2.1",
     "toml>=0.10.2",
-    "flask-migrate>=4.1.0",
 ]

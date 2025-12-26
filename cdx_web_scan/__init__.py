@@ -11,8 +11,7 @@ import toml
 # Third party imports
 from flask import Flask, Response, jsonify, send_file, request, render_template
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from werkzeug.security import check_password_hash
+from pathlib import Path
 from dotenv import load_dotenv
 
 # Local imports
@@ -97,7 +96,6 @@ app.logger.info(f"CDX Web Scan Database URI: {app.config['SQLALCHEMY_DATABASE_UR
 print(f"CDX Web Scan Database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
 db = SQLAlchemy(app)
-Migrate(app, db)
 
 
 ##################################
@@ -126,4 +124,25 @@ def get_version():
 @app.context_processor
 def inject_globals():
     """Inject global variables into all templates."""
-    return {"version": get_version(), "current_year": datetime.now().year}
+
+    def get_asset_rev() -> int:
+        static_dir = Path(__file__).resolve().parent / "static"
+        candidates = [
+            static_dir / "app.js",
+            static_dir / "styles.css",
+            static_dir / "service-worker.js",
+            static_dir / "manifest.webmanifest",
+        ]
+        mtimes: list[int] = []
+        for p in candidates:
+            try:
+                mtimes.append(int(p.stat().st_mtime))
+            except OSError:
+                continue
+        return max(mtimes) if mtimes else int(datetime.now().timestamp())
+
+    return {
+        "version": get_version(),
+        "asset_rev": get_asset_rev(),
+        "current_year": datetime.now().year,
+    }

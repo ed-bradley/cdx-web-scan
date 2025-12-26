@@ -1,0 +1,96 @@
+<div class="batch">
+  <div class="batch-header">
+    <h2 class="section-title">Current Batch</h2>
+    <div class="muted">{{ items|length }} item{% if items|length != 1 %}s{% endif %}</div>
+  </div>
+
+  {% if items|length == 0 %}
+    <div class="muted">No items yet. Scan or type a code to add it.</div>
+  {% else %}
+    {% if total_pages and total_pages > 1 %}
+      <div class="batch-pager">
+        <button
+          class="button secondary"
+          type="button"
+          hx-get="/batch?page={{ page - 1 }}"
+          hx-target="#batch"
+          hx-swap="innerHTML"
+          {% if page <= 1 %}disabled{% endif %}
+        >
+          Prev
+        </button>
+        <div class="muted">Page {{ page }} / {{ total_pages }}</div>
+        <button
+          class="button secondary"
+          type="button"
+          hx-get="/batch?page={{ page + 1 }}"
+          hx-target="#batch"
+          hx-swap="innerHTML"
+          {% if page >= total_pages %}disabled{% endif %}
+        >
+          Next
+        </button>
+      </div>
+    {% endif %}
+
+    <ol class="batch-list" start="{{ ol_start or 1 }}">
+      {% for item in page_items %}
+        <li class="batch-item">
+          <div class="batch-top">
+            <div class="batch-left">
+              <span class="mono">{{ item.code }}</span>
+              <span class="badge">{{ item.source }}</span>
+              <span class="badge">{{ item.format or 'unknown' }}</span>
+            </div>
+
+            <button
+              class="icon-button"
+              type="button"
+              aria-label="Delete from batch"
+              data-confirm-modal="1"
+              data-confirm-ok="Delete"
+              data-confirm-message="Remove this item from the batch?"
+              hx-trigger="confirmed"
+              hx-post="/batch/delete/{{ item.code }}"
+              hx-target="#batch"
+              hx-swap="innerHTML"
+            >
+              ×
+            </button>
+          </div>
+          {% if item.title %}
+            <div class="batch-note muted">{{ item.title }}</div>
+          {% endif %}
+          <time class="batch-time muted" datetime="{{ item.captured_at }}">{{ item.captured_at }}</time>
+        </li>
+      {% endfor %}
+    </ol>
+
+    <div class="actions">
+      <button
+        class="button secondary"
+        type="button"
+        hx-trigger="confirmed"
+        hx-post="/batch/clear"
+        data-confirm-modal="1"
+        data-confirm-ok="Clear"
+        data-confirm-message="Clear the current batch? This cannot be undone."
+        hx-target="#batch"
+        hx-swap="innerHTML"
+      >
+        Clear Batch
+      </button>
+      <button
+        class="button"
+        type="button"
+        hx-post="/batch/submit"
+        hx-target="#submit-result"
+        hx-swap="innerHTML"
+      >
+        Submit Batch
+      </button>
+    </div>
+
+    <div id="submit-result" class="result"></div>
+  {% endif %}
+</div>

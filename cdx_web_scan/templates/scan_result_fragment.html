@@ -1,0 +1,10 @@
+{% if ok %}
+<div class="result-ok">
+    <strong>{{ message }}</strong>{% if barcode %}: <span class="mono">{{ barcode }}</span>{% endif %}
+    {% if scan_id %}<div class="muted">Scan ID: <span class="mono">{{ scan_id }}</span></div>{% endif %}
+</div>
+{% else %}
+<div class="result-error">
+    <strong>Error:</strong> {{ message }}
+</div>
+{% endif %}

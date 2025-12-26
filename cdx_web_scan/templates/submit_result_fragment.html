@@ -1,0 +1,15 @@
+{% if ok %}
+<div class="result-ok">
+  <strong>{{ message }}</strong>
+  {% if response_body %}
+    <pre class="pre">{{ response_body }}</pre>
+  {% endif %}
+</div>
+{% else %}
+<div class="result-error">
+  <strong>Error:</strong> {{ message }}
+  {% if response_body %}
+    <pre class="pre">{{ response_body }}</pre>
+  {% endif %}
+</div>
+{% endif %}
