@@ -1,4 +1,47 @@
 (() => {
+	const themeToggleBtn = document.getElementById("theme-toggle");
+	const themeIcon = themeToggleBtn ? themeToggleBtn.querySelector(".theme-icon") : null;
+	const themeMeta = document.querySelector("meta[name='theme-color']");
+
+	function setTheme(theme) {
+		const t = theme === "dark" ? "dark" : "light";
+		document.documentElement.dataset.theme = t;
+		try {
+			localStorage.setItem("theme", t);
+		} catch {
+			// ignore
+		}
+		if (themeIcon) themeIcon.textContent = t === "dark" ? "☀" : "☾";
+		if (themeToggleBtn) {
+			themeToggleBtn.setAttribute(
+				"aria-label",
+				t === "dark" ? "Switch to light mode" : "Switch to dark mode"
+			);
+			themeToggleBtn.title = t === "dark" ? "Switch to light mode" : "Switch to dark mode";
+		}
+		if (themeMeta) themeMeta.setAttribute("content", t === "dark" ? "#0f1115" : "#ffffff");
+	}
+
+	function getInitialTheme() {
+		try {
+			const stored = localStorage.getItem("theme");
+			if (stored === "light" || stored === "dark") return stored;
+		} catch {
+			// ignore
+		}
+		return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+			? "dark"
+			: "light";
+	}
+
+	setTheme(getInitialTheme());
+	if (themeToggleBtn) {
+		themeToggleBtn.addEventListener("click", () => {
+			const current = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+			setTheme(current === "dark" ? "light" : "dark");
+		});
+	}
+
 	const barcodeInput = document.getElementById("barcode");
 	const titleInput = document.getElementById("title");
 	const sourceInput = document.getElementById("source");

@@ -2,8 +2,21 @@
 {% block content %}
 <div class="page">
     <header class="page-header">
-        <h1 class="title">CDX Web Scan</h1>
-        <p class="subtitle">Enter or scan a UPC/EAN barcode.</p>
+        <div class="page-header-row">
+            <div>
+                <h1 class="title">CDX Web Scan</h1>
+                <p class="subtitle">Enter or scan a UPC/EAN barcode.</p>
+            </div>
+            <button
+                id="theme-toggle"
+                class="icon-button"
+                type="button"
+                aria-label="Toggle light/dark mode"
+                title="Toggle light/dark mode"
+            >
+                <span class="theme-icon" aria-hidden="true">☾</span>
+            </button>
+        </div>
     </header>
 
     <section class="card">
