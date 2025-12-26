@@ -354,8 +354,25 @@
 
 	function setCameraPanelVisible(visible) {
 		if (!cameraPanel) return;
+		if (!visible) {
+			const active = document.activeElement;
+			if (active && cameraPanel.contains(active)) {
+				// Move focus to a visible control before hiding the panel.
+				focusBarcode();
+				// If the barcode field isn't focusable for some reason, at least blur.
+				if (document.activeElement === active && typeof active.blur === "function") {
+					active.blur();
+				}
+			}
+		}
 		cameraPanel.classList.toggle("hidden", !visible);
 		cameraPanel.setAttribute("aria-hidden", visible ? "false" : "true");
+		// Prefer inert when hidden to prevent focus from remaining inside.
+		if (visible) {
+			cameraPanel.removeAttribute("inert");
+		} else {
+			cameraPanel.setAttribute("inert", "");
+		}
 	}
 
 	async function stopCamera({ resetSource = true } = {}) {

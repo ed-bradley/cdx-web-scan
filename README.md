@@ -84,6 +84,44 @@ This mirrors modern enterprise patterns where **intake tools are private, intern
 
 ---
 
+## Docker Deployment (Gunicorn + NGINX)
+
+This repo includes a production-oriented Docker setup:
+
+- Gunicorn runs the Flask app in the `app` container
+- NGINX runs as a reverse proxy in the `nginx` container
+- A named Docker volume persists the SQLite DB and log file
+
+### First-time setup (Ubuntu 24.04)
+
+1) Copy environment template:
+
+```bash
+cp .env.example .env
+```
+
+2) Edit `.env` and set at least:
+
+- `SECRET_KEY`
+- `INTAKE_API_URL` (+ optional `INTAKE_API_TOKEN`)
+
+3) Build and start:
+
+```bash
+docker compose up -d --build
+```
+
+The app will be available via NGINX on `http://<server-ip>/`.
+
+### Updating
+
+```bash
+git pull
+docker compose up -d --build
+```
+
+---
+
 ## Role in the CDX Platform
 
 `cdx-web-scan` is one of four deployment-aligned components in CDX:
