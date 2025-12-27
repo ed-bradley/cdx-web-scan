@@ -6,7 +6,16 @@
 `cdx-web-scan` is the **internal-facing intake application** for the CDX platform.  
 It provides a mobile-friendly, utility-first interface for capturing physical “widgets” (CDs) and submitting them into an enterprise-style intake pipeline.
 
-![CDX Web Scan Screenshot](docs/CDX-Web-Scan_Screenshot2.png)
+<table>
+  <tr>
+    <td>
+      <img src="docs/CDX-Web-Scan_Screenshot2.png" alt="CDX Web Scan Screenshot 2" width="100%" />
+    </td>
+    <td>
+      <img src="docs/CDX-Web-Scan_Screenshot4.png" alt="CDX Web Scan Screenshot 4" width="100%" />
+    </td>
+  </tr>
+</table>
 
 While CDs are the concrete input, this application is intentionally designed to model a **generic enterprise intake UI**, similar to those used for:
 
