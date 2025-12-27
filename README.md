@@ -78,7 +78,7 @@ This is an **internal utility**, intentionally simple and task-focused.
 
 - Runs **on-prem / homelab**
 - Served behind **NGINX**
-- Accessible only via **NetBird (Zero Trust VPN)**
+- Externally accessible only via **NetBird (Zero Trust VPN)**
 - No public exposure
 - Communicates outbound to the cloud intake API
 
