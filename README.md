@@ -98,6 +98,19 @@ This mirrors modern enterprise patterns where **intake tools are private, intern
 
 ---
 
+## Database
+
+`cdx-web-scan` maintains a **local SQLite database** to support durability and operational recovery.
+
+It is used to store:
+
+- **Original scan events** captured by operators (source, timestamps, notes, barcodes)
+- **AWS Intake API call history** (payload/attempt/status) for tracking, recovery, and troubleshooting
+
+![CDX Web Scan Database Screenshot](docs/CDX-Web-Scan_Db_Screenshot1.png)
+
+---
+
 ## Docker Deployment (Gunicorn + NGINX)
 
 This repo includes a production-oriented Docker setup:
