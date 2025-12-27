@@ -60,6 +60,9 @@ This is an **internal utility**, intentionally simple and task-focused.
 - **HTMX**
 - **Jinja2 templates**
 
+### Tooling
+- **uv** (dependency management + running dev/test commands)
+
 ### Front-End Behavior
 - **Minimal JavaScript**
   - Camera access
@@ -162,6 +165,22 @@ The app will be available via NGINX:
 git pull
 docker compose --env-file .env up -d --build
 ```
+
+### Testing
+
+This repo includes a small `pytest` suite (smoke tests + basic DB test).
+
+Project tooling uses `uv`, so tests are run via `uv run ...`.
+
+Run tests locally:
+
+```bash
+uv run --group dev pytest -q
+```
+
+Notes:
+
+- Tests force the app to use a temporary folder for SQLite + logs, so they do not touch your external persistence directory.
 
 ### Full reset (wipe containers + external DB/logs)
 
