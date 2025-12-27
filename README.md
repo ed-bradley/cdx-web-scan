@@ -91,39 +91,85 @@ This mirrors modern enterprise patterns where **intake tools are private, intern
 This repo includes a production-oriented Docker setup:
 
 - Gunicorn runs the Flask app in the `app` container
-- NGINX runs as a reverse proxy in the `nginx` container
-- A named Docker volume persists the SQLite DB and log file
+- NGINX runs as a reverse proxy + TLS terminator in the `nginx` container
+- HTTPS is exposed on `443` (self-signed certificate)
+- HTTPS is required for mobile browser camera access (secure context)
+- Optional plain HTTP is exposed on `8080` and redirects to HTTPS
+- SQLite DB + logs persist to a host folder via a bind mount
 
-### First-time setup (Ubuntu 24.04)
+### Deploy from scratch (Linux)
 
-1) Copy environment template:
+Assumptions:
+
+- Docker + Docker Compose are installed
+- Host ports `443` and `8080` are available
+
+1) Copy the environment template:
 
 ```bash
 cp .env.example .env
 ```
 
-2) Edit `.env` and set at least:
+2) Edit `.env` and set (at minimum):
 
 - `SECRET_KEY`
-- `INTAKE_API_URL` (+ optional `INTAKE_API_TOKEN`)
+- `INTAKE_API_URL` (+ optional `INTAKE_API_TOKEN`) 
 
-Optional (recommended) for host persistence:
+3) Set host persistence + permissions (recommended):
 
-- `CDX_WEB_SCAN_HOST_DATA_DIR` (host folder where SQLite DB + logs are stored)
+- `CDX_WEB_SCAN_HOST_DATA_DIR` (host folder where SQLite DB + logs will be written)
+- `CDX_WEB_SCAN_UID` / `CDX_WEB_SCAN_GID` (so persisted files are owned by your host user)
 
-3) Build and start:
+Example values:
 
 ```bash
-docker compose up -d --build
+CDX_WEB_SCAN_HOST_DATA_DIR=/home/you/CDX-Web-Scan
+CDX_WEB_SCAN_UID=1000
+CDX_WEB_SCAN_GID=1000
 ```
 
-The app will be available via NGINX on `http://<server-ip>/`.
+Create the folder:
+
+```bash
+mkdir -p "${CDX_WEB_SCAN_HOST_DATA_DIR}"
+```
+
+4) Create a self-signed TLS certificate for NGINX:
+
+```bash
+mkdir -p deploy/certs
+openssl req -x509 -newkey rsa:2048 -sha256 -days 3650 -nodes \
+  -keyout deploy/certs/cdx-web-scan.key \
+  -out deploy/certs/cdx-web-scan.crt \
+  -subj "/CN=localhost" \
+  -addext "subjectAltName=DNS:localhost,IP:127.0.0.1"
+```
+
+5) Build and start:
+
+```bash
+docker compose --env-file .env up -d --build
+```
+
+The app will be available via NGINX:
+
+- `https://<server-ip>/` (self-signed cert)
+- `http://<server-ip>:8080/` (redirects to HTTPS)
 
 ### Updating
 
 ```bash
 git pull
-docker compose up -d --build
+docker compose --env-file .env up -d --build
+```
+
+### Full reset (wipe containers + external DB/logs)
+
+```bash
+docker compose --env-file .env down --volumes --remove-orphans --rmi local
+rm -rf "${CDX_WEB_SCAN_HOST_DATA_DIR}"
+mkdir -p "${CDX_WEB_SCAN_HOST_DATA_DIR}"
+docker compose --env-file .env up -d --build
 ```
 
 ---
