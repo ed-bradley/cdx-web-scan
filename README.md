@@ -105,6 +105,10 @@ cp .env.example .env
 - `SECRET_KEY`
 - `INTAKE_API_URL` (+ optional `INTAKE_API_TOKEN`)
 
+Optional (recommended) for host persistence:
+
+- `CDX_WEB_SCAN_HOST_DATA_DIR` (host folder where SQLite DB + logs are stored)
+
 3) Build and start:
 
 ```bash

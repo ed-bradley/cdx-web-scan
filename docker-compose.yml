@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    user: "${CDX_WEB_SCAN_UID:-1000}:${CDX_WEB_SCAN_GID:-1000}"
     environment:
       # Flask config selector (required; used by cdx_web_scan/__init__.py)
       APP_MODE: config.ProdConfig
@@ -22,7 +23,8 @@ services:
       INTAKE_API_TOKEN: ${INTAKE_API_TOKEN}
 
     volumes:
-      - cdx_data:/data
+      # Bind-mount host folder to persist SQLite DB + logs outside Docker
+      - ${CDX_WEB_SCAN_HOST_DATA_DIR:-./cdx_data}:/data
 
   nginx:
     image: nginx:1.27-alpine
@@ -36,5 +38,4 @@ services:
       - ./deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./deploy/certs:/etc/nginx/certs:ro
 
-volumes:
-  cdx_data:
+ 
