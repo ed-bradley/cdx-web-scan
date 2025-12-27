@@ -9,7 +9,7 @@ It provides a mobile-friendly, utility-first interface for capturing physical â€
 <table>
   <tr>
     <td>
-      <img src="docs/CDX-Web-Scan_Screenshot2.png" alt="CDX Web Scan Screenshot 2" width="100%" />
+      <img src="docs/CDX-Web-Scan_Screenshot5.png" alt="CDX Web Scan Screenshot 2" width="100%" />
     </td>
     <td>
       <img src="docs/CDX-Web-Scan_Screenshot4.png" alt="CDX Web Scan Screenshot 4" width="100%" />
