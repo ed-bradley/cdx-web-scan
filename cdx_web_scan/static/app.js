@@ -70,7 +70,7 @@
 
 	function isLikelyWedge(value) {
 		// Heuristic: rapid digit burst producing a valid-length numeric barcode.
-		// Typical wedges emit keystrokes extremely quickly; humans don't.
+		// Typical wedges emit keystrokes a lot faster than a human can type
 		if (!value) return false;
 		if (!/^\d{8,14}$/.test(value)) return false;
 		if (digitKeyTimes.length < Math.min(8, value.length)) return false;
@@ -81,6 +81,7 @@
 		const avgMs = durationMs / Math.max(1, digitKeyTimes.length - 1);
 
 		// Conservative thresholds:
+        // Consider it a wedge scan if either:
 		// - average <= 35ms between digits OR total <= 400ms for 12-13 digits.
 		if (avgMs <= 35) return true;
 		if (value.length >= 10 && durationMs <= 400) return true;
@@ -100,10 +101,12 @@
 		barcodeInput.focus({ preventScroll: true });
 	}
 
+    // Format <time> elements with class "batch-time" to local timezone and more readable format
 	function formatLocalTimes(root = document) {
 		const nodes = root.querySelectorAll("time.batch-time[datetime]");
 		if (!nodes.length) return;
 
+        // Intl.DateTimeFormat options for a readable local date/time
 		const formatter = new Intl.DateTimeFormat(undefined, {
 			year: "numeric",
 			month: "short",
@@ -113,6 +116,7 @@
 			second: "2-digit",
 		});
 
+        // Update each selected node's text content
 		nodes.forEach((node) => {
 			const iso = node.getAttribute("datetime") || "";
 			const d = new Date(iso);
@@ -144,7 +148,7 @@
 		formatLocalTimes(document);
 	});
 
-	// Custom confirmation modal (replaces browser confirm())
+	// Custom confirmation modal (replaces browser confirm() - looks better)
 	const confirmOverlay = document.getElementById("confirm-modal");
 	const confirmMessage = document.getElementById("confirm-message");
 	const confirmCancel = document.getElementById("confirm-cancel");
@@ -152,6 +156,7 @@
 
 	let confirmState = null;
 
+    // Hide the custom confirm modal and restore focus if needed
 	function hideConfirmModal({ restoreFocus = true } = {}) {
 		if (!confirmOverlay) return;
 		confirmOverlay.classList.add("hidden");
@@ -168,6 +173,7 @@
 		confirmState = null;
 	}
 
+    // Show the custom confirm modal with specified message, OK text, and callback
 	function showConfirmModal({ message, okText, onConfirm }) {
 		if (!confirmOverlay || !confirmMessage || !confirmCancel || !confirmOk) {
 			return false;
@@ -325,7 +331,7 @@
 		barcodeInput.addEventListener("input", (e) => {
 			const v = (barcodeInput.value || "").trim();
 
-			// Paste/drop should be treated as manual (not a wedge burst).
+			// Copy/Paste/Drop should be treated as manual (not a wedge burst).
 			const inputType = e && e.inputType ? String(e.inputType) : "";
 			if (inputType === "insertFromPaste" || inputType === "insertFromDrop") {
 				if (sourceInput && sourceInput.value !== "camera") sourceInput.value = "manual";
@@ -352,6 +358,7 @@
 		});
 	}
 
+    // Show/hide camera scanning panel
 	function setCameraPanelVisible(visible) {
 		if (!cameraPanel) return;
 		if (!visible) {
@@ -375,6 +382,7 @@
 		}
 	}
 
+    // Stop camera scanning and release resources
 	async function stopCamera({ resetSource = true } = {}) {
 		scanning = false;
 		if (scanLoopHandle) {
@@ -393,6 +401,7 @@
 		focusBarcode();
 	}
 
+    // Start camera scanning for barcodes
 	async function startCamera() {
 		if (!cameraPanel || !cameraVideo) return;
 
@@ -402,6 +411,7 @@
 			return;
 		}
 
+        // Look for common Barcode formats found on CDs
 		try {
 			detector = new window.BarcodeDetector({
 				formats: ["ean_13", "ean_8", "upc_a", "upc_e", "code_128"],

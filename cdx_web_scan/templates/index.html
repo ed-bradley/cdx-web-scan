@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="page">
+    <!--Page header and theme control (light/dark mode toggle)-->
     <header class="page-header">
         <div class="page-header-row">
             <div>
@@ -19,6 +20,7 @@
         </div>
     </header>
 
+    <!-- Barcode Input Form -->
     <section class="card">
         <form
             id="barcode-form"
@@ -60,6 +62,7 @@
         <div id="scan-result" class="result" aria-live="polite"></div>
     </section>
 
+    <!-- Camera Panel -->
     <section class="card">
     <section id="camera-panel" class="card hidden" aria-hidden="true">
         <div class="camera-header">
@@ -71,6 +74,7 @@
         <canvas id="camera-canvas" class="hidden"></canvas>
     </section>
 
+    <!-- Batch List -->
     <section class="card">
         <div id="batch">
             {% include "batch_fragment.html" %}

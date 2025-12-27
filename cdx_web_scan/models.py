@@ -68,7 +68,7 @@ class IntakeStatus(str, enum.Enum):
 
 class ScanSession(db.Model):
     """
-    Optional: groups scans from one sitting/run (one box of CDs, one thrift trip, etc.).
+    Optional: groups scans from one sitting/run (one box of CDs, one shift, etc.).
     """
     __tablename__ = "scan_session"
 
@@ -139,6 +139,8 @@ class Scan(db.Model):
         cascade="all, delete-orphan",
         passive_deletes=True,
         order_by="BarcodeCapture.created_at.asc()",
+        foreign_keys=lambda: [BarcodeCapture.scan_id],
+        overlaps="primary_barcode",
     )
 
     intake_calls: Mapped[List["AwsIntakeCall"]] = relationship(
@@ -151,6 +153,7 @@ class Scan(db.Model):
     primary_barcode: Mapped[Optional["BarcodeCapture"]] = relationship(
         foreign_keys=[primary_barcode_id],
         post_update=True,
+        overlaps="barcodes,scan",
     )
 
     __table_args__ = (
@@ -189,7 +192,11 @@ class BarcodeCapture(db.Model):
     # Decoder metadata (confidence, library/version, camera params)
     decode_meta: Mapped[Optional[dict[str, Any]]] = mapped_column(JSON, nullable=True)
 
-    scan: Mapped["Scan"] = relationship(back_populates="barcodes")
+    scan: Mapped["Scan"] = relationship(
+        back_populates="barcodes",
+        foreign_keys=[scan_id],
+        overlaps="primary_barcode",
+    )
 
     __table_args__ = (
         # Prevent obvious duplicates within the same scan.
@@ -201,7 +208,7 @@ class BarcodeCapture(db.Model):
 
 class AwsIntakeCall(db.Model):
     """
-    Audit trail of calls made from CDX-WEB-SCAN to your AWS Intake API
+    Audit trail of calls made from CDX-WEB-SCAN to the AWS Intake API
     (which will enqueue to SQS and trigger the enrichment worker).
 
     This table is the replay + troubleshooting history for:

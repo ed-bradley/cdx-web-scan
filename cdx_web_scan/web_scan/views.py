@@ -13,8 +13,10 @@ from cdx_web_scan.web_scan.forms import validate_upc_ean
 # blueprint router configuration
 web_scan = Blueprint("web_scan", __name__)
 
+# Path to static files for manifest and service worker
 _STATIC_DIR = Path(__file__).resolve().parents[1] / "static"
 
+#  Global constants
 _BATCH_PER_PAGE = 5
 _DEFAULT_TITLE = " -- UNTITLED -- "
 

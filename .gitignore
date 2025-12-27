@@ -191,6 +191,9 @@ cython_debug/
 # Ruff stuff:
 .ruff_cache/
 
+# Local TLS certificates (self-signed)
+deploy/certs/
+
 # PyPI configuration file
 .pypirc
 

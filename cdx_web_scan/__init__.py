@@ -87,6 +87,7 @@ def get_log():
 ##################################
 ### Database Setup
 ##################################
+os.makedirs(app.config["CDX_WEB_SCAN_FOLDER"], exist_ok=True)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
     app.config["CDX_WEB_SCAN_FOLDER"], app.config["CDX_WEB_SCAN_DB_FILE_NAME"]
 )
@@ -96,6 +97,12 @@ app.logger.info(f"CDX Web Scan Database URI: {app.config['SQLALCHEMY_DATABASE_UR
 print(f"CDX Web Scan Database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
 db = SQLAlchemy(app)
+
+# Initialize schema (idempotent) so local persistence works out of the box.
+with app.app_context():
+    import cdx_web_scan.models  # noqa: F401
+
+    db.create_all()
 
 
 ##################################

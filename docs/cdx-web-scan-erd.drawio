@@ -1,0 +1,42 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36" version="28.2.5">
+  <diagram id="erd-page" name="ERD">
+    <mxGraphModel dx="2376" dy="731" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="scan_session" value="&lt;b&gt;scan_session&lt;/b&gt;&lt;div&gt;PK id (uuid)&lt;br&gt;created_at&lt;br&gt;ended_at&lt;br&gt;operator&lt;br&gt;source&lt;br&gt;device_name&lt;br&gt;host&lt;br&gt;app_version&lt;br&gt;git_sha&lt;br&gt;notes&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="-1080" y="75" width="180" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="scan" value="&lt;b&gt;scan&lt;/b&gt;&lt;div&gt;PK id (uuid)&lt;br&gt;FK session_id → scan_session.id&lt;br&gt;created_at&lt;br&gt;updated_at&lt;br&gt;source&lt;br&gt;operator&lt;br&gt;client_fingerprint&lt;br&gt;raw_input&lt;br&gt;notes&lt;br&gt;FK primary_barcode_id → barcode_capture.id (nullable)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" parent="1" vertex="1">
+          <mxGeometry x="-770" y="60" width="310" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="barcode_capture" value="&lt;b&gt;barcode_capture&lt;/b&gt;&lt;div&gt;PK id (uuid)&lt;br&gt;FK scan_id → scan.id&lt;br&gt;created_at&lt;br&gt;symbology&lt;br&gt;value_raw&lt;br&gt;value_normalized&lt;br&gt;checksum_valid&lt;br&gt;is_primary&lt;br&gt;capture_method&lt;br&gt;decode_meta (json)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="-705" y="540" width="180" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="aws_intake_call" value="&lt;b&gt;aws_intake_call&lt;/b&gt;&lt;div&gt;PK id (uuid)&lt;br&gt;FK scan_id → scan.id&lt;br&gt;created_at&lt;br&gt;idempotency_key&lt;br&gt;attempt&lt;br&gt;status&lt;br&gt;api_base_url&lt;br&gt;api_path&lt;br&gt;request_headers (json)&lt;br&gt;request_body (json)&lt;br&gt;http_status&lt;br&gt;duration_ms&lt;br&gt;response_headers (json)&lt;br&gt;response_body (json)&lt;br&gt;error&lt;br&gt;correlation_id&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" parent="1" vertex="1">
+          <mxGeometry x="-280" y="30" width="250" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_session_scans" value="1 → 0..* (scans)" style="endArrow=block;html=1;rounded=0;strokeColor=#000000;fontSize=14;" parent="1" source="scan_session" target="scan" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-720" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_scan_barcodes" value="1 → 0..* (barcodes)" style="endArrow=block;html=1;rounded=0;strokeColor=#000000;fontSize=17;" parent="1" source="scan" target="barcode_capture" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_scan_intake" value="1 → 0..* (intake_calls)" style="endArrow=block;html=1;rounded=0;strokeColor=#000000;fontSize=15;" parent="1" source="scan" target="aws_intake_call" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_primary_barcode" value="0..1 (primary_barcode)" style="endArrow=block;dashed=1;html=1;rounded=0;strokeColor=#000000;fontSize=18;" parent="1" source="scan" target="barcode_capture" edge="1">
+          <mxGeometry x="0.0682" y="110" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-460" y="380" />
+              <mxPoint x="-460" y="530" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
