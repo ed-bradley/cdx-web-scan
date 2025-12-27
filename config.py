@@ -18,8 +18,22 @@ class Config:
     """Base config."""
 
     SECRET_KEY = environ.get("SECRET_KEY")
-    CDX_WEB_SCAN_LOG_FILE = environ.get("CDX_WEB_SCAN_LOG_FILE")
-    APP_SERVER_OS = environ.get("APP_SERVER_OS")
+
+    # Default persistence location for local dev.
+    # Docker sets CDX_WEB_SCAN_FOLDER=/data explicitly, so these defaults won't interfere.
+    CDX_WEB_SCAN_FOLDER = (
+        environ.get("CDX_WEB_SCAN_FOLDER")
+        or environ.get("CDX_WEB_SCAN_HOST_DATA_DIR")
+        or path.join(basedir, "cdx_data")
+    )
+    CDX_WEB_SCAN_DB_FOLDER = environ.get("CDX_WEB_SCAN_DB_FOLDER") or CDX_WEB_SCAN_FOLDER
+    CDX_WEB_SCAN_DB_FILE_NAME = environ.get("CDX_WEB_SCAN_DB_FILE_NAME") or "cdx_web_scan.sqlite"
+    CDX_WEB_SCAN_LOG_FILE = (
+        environ.get("CDX_WEB_SCAN_LOG_FILE")
+        or path.join(CDX_WEB_SCAN_FOLDER, "cdx_web_scan.log")
+    )
+
+    APP_SERVER_OS = environ.get("APP_SERVER_OS") or "Linux"
 
     # Intake API (AWS API Gateway + Lambda)
     INTAKE_API_URL = environ.get("INTAKE_API_URL")
@@ -32,9 +46,7 @@ class ProdConfig(Config):
     DEBUG = False
     TESTING = False
     LOG_LINES_TO_SHOW = "164"
-    CDX_WEB_SCAN_DB_FOLDER = environ.get("CDX_WEB_SCAN_DB_FOLDER")
-    CDX_WEB_SCAN_DB_FILE_NAME = environ.get("CDX_WEB_SCAN_DB_FILE_NAME")
-    CDX_WEB_SCAN_FOLDER = environ.get("CDX_WEB_SCAN_FOLDER")
+    
 
 
 class DevConfig(Config):
@@ -43,9 +55,5 @@ class DevConfig(Config):
     FLASK_ENV = "development"
     DEBUG = True
     TESTING = True
-    CDX_WEB_SCAN_FOLDER = environ.get("CDX_WEB_SCAN_FOLDER")
     LOG_LINES_TO_SHOW = "164"
-    CDX_WEB_SCAN_DB_FOLDER = environ.get("CDX_WEB_SCAN_DB_FOLDER")
-    CDX_WEB_SCAN_DB_FILE_NAME = environ.get("CDX_WEB_SCAN_DB_FILE_NAME")
-    CDX_WEB_SCAN_LOG_FILE = environ.get("CDX_WEB_SCAN_LOG_FILE")
     
