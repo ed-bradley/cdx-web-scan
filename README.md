@@ -6,6 +6,8 @@
 `cdx-web-scan` is the **internal-facing intake application** for the CDX platform.  
 It provides a mobile-friendly, utility-first interface for capturing physical “widgets” (CDs) and submitting them into an enterprise-style intake pipeline.
 
+![CDX Web Scan Screenshot](docs/CDX-Web-Scan_Screenshot1.png)
+
 While CDs are the concrete input, this application is intentionally designed to model a **generic enterprise intake UI**, similar to those used for:
 
 - inventory receiving
@@ -155,18 +157,25 @@ The use of CDs is incidental; the **workflow and architecture** are the core foc
 
 ## Repository Structure (Initial)
 
-```cdx-web-scan/
-├── cdx_web_scan/
-│ ├── app.py
-│ ├── routes/
-│ ├── templates/
-│ └── static/
-│ └── brand/
-├── docs/
-│ └── roadmap.md
-├── pyproject.toml
-├── .env.example
-└── README.md
+```.
+├── cdx_web_scan
+│   ├── error_pages
+│   │   └── __pycache__
+│   ├── __pycache__
+│   ├── static
+│   │   └── img
+│   ├── templates
+│   │   └── error_pages
+│   └── web_scan
+│       └── __pycache__
+├── deploy
+│   └── certs
+├── docs
+├── migrations
+│   ├── __pycache__
+│   └── versions
+└── __pycache__
+
 ```
 
 ---
